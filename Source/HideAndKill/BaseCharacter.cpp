@@ -5,7 +5,7 @@
 #include <GameFramework/CharacterMovementComponent.h>
 
 const float ABaseCharacter::WalkSpeed = 200.f;
-const float ABaseCharacter::RunSpeed = 500.f;
+const float ABaseCharacter::SprintSpeed = 500.f;
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -22,11 +22,6 @@ void ABaseCharacter::BeginPlay()
 	
 }
 
-void ABaseCharacter::SetRunning(bool bRunning)
-{
-	GetCharacterMovement()->MaxWalkSpeed = bRunning ? RunSpeed : WalkSpeed;
-}
-
 // Called every frame
 void ABaseCharacter::Tick(float DeltaTime)
 {
@@ -41,3 +36,7 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 }
 
+void ABaseCharacter::Sprint(bool bEnable)
+{
+	GetCharacterMovement()->MaxWalkSpeed = bEnable ? SprintSpeed : WalkSpeed;
+}

@@ -15,13 +15,11 @@ public:
 	// Sets default values for this character's properties
 	ABaseCharacter();
 	static const float WalkSpeed;
-	static const float RunSpeed;
+	static const float SprintSpeed;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	virtual void SetRunning(bool running);
 
 public:	
 	// Called every frame
@@ -30,5 +28,6 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-
+	UFUNCTION(BlueprintCallable)
+	void Sprint(bool bEnable);
 };
