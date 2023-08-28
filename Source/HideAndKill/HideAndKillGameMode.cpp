@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "HideAndKillGameMode.h"
 #include "TP_ThirdPerson/TP_ThirdPersonCharacter.h"
 #include "UObject/ConstructorHelpers.h"
-#include "HideAndKillGameMode.h"
 
 AHideAndKillGameMode::AHideAndKillGameMode()
 {
