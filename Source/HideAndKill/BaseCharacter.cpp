@@ -23,3 +23,8 @@ UBaseCharacterMovementComponent* ABaseCharacter::GetBaseCharacterMovement() cons
 {
 	return StaticCast<UBaseCharacterMovementComponent*>(GetCharacterMovement());
 }
+
+void ABaseCharacter::OnKill(AActor* Killer)
+{
+	Destroy();
+}
