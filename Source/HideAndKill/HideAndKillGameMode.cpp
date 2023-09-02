@@ -4,7 +4,6 @@
 #include "TP_ThirdPerson/TP_ThirdPersonCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 
-
 AHideAndKillGameMode::AHideAndKillGameMode()
 {
 	// set default pawn class to our Blueprinted character
