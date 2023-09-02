@@ -8,6 +8,9 @@
 
 class UBaseCharacterMovementComponent;
 
+/**
+* Base character class inherited by Player and NPC
+*/
 UCLASS()
 class HIDEANDKILL_API ABaseCharacter : public ACharacter
 {
