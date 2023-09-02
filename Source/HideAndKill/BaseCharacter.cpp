@@ -2,41 +2,24 @@
 
 
 #include "BaseCharacter.h"
-#include <GameFramework/CharacterMovementComponent.h>
 
-const float ABaseCharacter::WalkSpeed = 200.f;
-const float ABaseCharacter::SprintSpeed = 500.f;
+#include "BaseCharacterMovementComponent.h"
 
 // Sets default values
-ABaseCharacter::ABaseCharacter()
+ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
+: Super(ObjectInitializer.SetDefaultSubobjectClass<UBaseCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 }
 
-// Called when the game starts or when spawned
-void ABaseCharacter::BeginPlay()
+void ABaseCharacter::SetSprinting(bool bEnable)
 {
-	Super::BeginPlay();
-	
+	if (auto mc = GetBaseCharacterMovement())
+	{
+		mc->bWantsToSprint = bEnable;
+	}
 }
 
-// Called every frame
-void ABaseCharacter::Tick(float DeltaTime)
+UBaseCharacterMovementComponent* ABaseCharacter::GetBaseCharacterMovement() const
 {
-	Super::Tick(DeltaTime);
-
-}
-
-// Called to bind functionality to input
-void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-}
-
-void ABaseCharacter::Sprint(bool bEnable)
-{
-	GetCharacterMovement()->MaxWalkSpeed = bEnable ? SprintSpeed : WalkSpeed;
+	return StaticCast<UBaseCharacterMovementComponent*>(GetCharacterMovement());
 }

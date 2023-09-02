@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "BaseCharacter.generated.h"
 
+class UBaseCharacterMovementComponent;
+
 UCLASS()
 class HIDEANDKILL_API ABaseCharacter : public ACharacter
 {
@@ -13,21 +15,13 @@ class HIDEANDKILL_API ABaseCharacter : public ACharacter
 
 public:
 	// Sets default values for this character's properties
-	ABaseCharacter();
-	static const float WalkSpeed;
-	static const float SprintSpeed;
+	ABaseCharacter(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+public:
 	UFUNCTION(BlueprintCallable)
-	void Sprint(bool bEnable);
+	void SetSprinting(bool bEnable);
+
+	// Replacement for GetCharacterMovement, because can't Cast<> on FORCEINLINE method
+	UFUNCTION(BlueprintCallable)
+	UBaseCharacterMovementComponent* GetBaseCharacterMovement() const;
 };
