@@ -48,6 +48,10 @@ ATP_ThirdPersonCharacter::ATP_ThirdPersonCharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
+
+	// Create kill area
+	KillArea = CreateDefaultSubobject<UBoxComponent>(TEXT("KillArea"));
+	KillArea->SetupAttachment(RootComponent);
 }
 
 void ATP_ThirdPersonCharacter::BeginPlay()
@@ -62,6 +66,46 @@ void ATP_ThirdPersonCharacter::BeginPlay()
 		{
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
+	}
+
+	// Kill area
+	KillArea->OnComponentBeginOverlap.AddUniqueDynamic(this, &ATP_ThirdPersonCharacter::OnKillTargetBeginOverlap);
+	KillArea->OnComponentEndOverlap.AddUniqueDynamic(this, &ATP_ThirdPersonCharacter::OnKillTargetEndOverlap);
+}
+
+AActor* ATP_ThirdPersonCharacter::GetKillTarget() const
+{
+	if (KillTargetCandidates.IsEmpty()) return nullptr;
+
+	// Get nearest target to player
+	AActor* KillTarget = nullptr;
+	for (auto Candidate : KillTargetCandidates)
+	{
+		if (KillTarget == nullptr) {
+			KillTarget = Candidate;
+			continue;
+		}
+		if (this->GetHorizontalDistanceTo(Candidate) < this->GetHorizontalDistanceTo(KillTarget))
+		{
+			KillTarget = Candidate;
+		}
+	}
+	return KillTarget;
+}
+
+void ATP_ThirdPersonCharacter::OnKillTargetBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (Cast<IKillable>(OtherActor) && OtherActor != this) // TODO filter with Object Channel instead ? 
+	{
+		KillTargetCandidates.Add(OtherActor);
+	}
+}
+
+void ATP_ThirdPersonCharacter::OnKillTargetEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (KillTargetCandidates.Contains(OtherActor))
+	{
+		KillTargetCandidates.Remove(OtherActor);
 	}
 }
 
@@ -85,6 +129,9 @@ void ATP_ThirdPersonCharacter::SetupPlayerInputComponent(class UInputComponent* 
 
 		//Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ATP_ThirdPersonCharacter::Look);
+
+		//Kill
+		EnhancedInputComponent->BindAction(KillAction, ETriggerEvent::Triggered, this, &ATP_ThirdPersonCharacter::Kill);
 
 	}
 
@@ -124,6 +171,11 @@ void ATP_ThirdPersonCharacter::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void ATP_ThirdPersonCharacter::Kill(const FInputActionValue& Value)
+{
+	UE_LOG(LogTemp, Log, TEXT("Want to kill !"));
 }
 
 

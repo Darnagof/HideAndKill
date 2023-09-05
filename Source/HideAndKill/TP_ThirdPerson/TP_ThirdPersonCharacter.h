@@ -6,6 +6,7 @@
 #include "../BaseCharacter.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "Components/BoxComponent.h"
 #include "TP_ThirdPersonCharacter.generated.h"
 
 
@@ -42,6 +43,10 @@ class ATP_ThirdPersonCharacter : public ABaseCharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* LookAction;
 
+	/** Kill Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* KillAction;
+
 public:
 	ATP_ThirdPersonCharacter();
 	
@@ -53,6 +58,9 @@ protected:
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
+
+	/** Called for kill input */
+	void Kill(const FInputActionValue& Value);
 			
 
 protected:
@@ -67,5 +75,20 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+private:
+	// Area to get nearby killable objects
+	UPROPERTY(EditAnywhere)
+	UBoxComponent* KillArea;
+	TSet<AActor*> KillTargetCandidates;
+
+	// Get targetable Actor for assassination
+	UFUNCTION(BlueprintCallable)
+	AActor* GetKillTarget() const;
+
+	UFUNCTION()
+	void OnKillTargetBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	UFUNCTION()
+	void OnKillTargetEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 };
 
