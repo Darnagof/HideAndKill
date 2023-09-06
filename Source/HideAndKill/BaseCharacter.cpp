@@ -26,5 +26,6 @@ UBaseCharacterMovementComponent* ABaseCharacter::GetBaseCharacterMovement() cons
 
 void ABaseCharacter::OnKill(AActor* Killer)
 {
+	UE_LOG(LogTemp, Log, TEXT("Killed by %s"), *Killer->GetName());
 	Destroy();
 }

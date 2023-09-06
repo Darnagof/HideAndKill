@@ -14,7 +14,8 @@ class UKillable : public UInterface
 };
 
 /**
- * 
+ * Interface for killable entity
+ * Must only be used with Actors
  */
 class HIDEANDKILL_API IKillable
 {

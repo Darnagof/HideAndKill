@@ -25,11 +25,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetSprinting(bool bEnable);
 
+private:
 	// Replacement for GetCharacterMovement, because can't Cast<> on FORCEINLINE method
 	UFUNCTION(BlueprintCallable)
 	UBaseCharacterMovementComponent* GetBaseCharacterMovement() const;
-
-	// Killable interface
 
 	virtual void OnKill(AActor* Killer) override;
 };

@@ -93,6 +93,36 @@ AActor* ATP_ThirdPersonCharacter::GetKillTarget() const
 	return KillTarget;
 }
 
+void ATP_ThirdPersonCharacter::ServerReqKill_Implementation(AActor* Target)
+{
+	// Get killable target
+	AActor* TargetToKill = GetKillTarget();
+	if (TargetToKill)
+	{
+		if (TargetToKill->Implements<UKillable>())
+		{
+			// Verify if this target is the same as the client, to avoid unwanted assassination due to latency
+			if (TargetToKill != Target) return;
+			// Assassinate target
+			MulticastKillTarget(TargetToKill);
+		}
+	}
+}
+
+void ATP_ThirdPersonCharacter::MulticastKillTarget_Implementation(AActor* Target)
+{
+	IKillable* TargetToKill = Cast<IKillable>(Target);
+	if (TargetToKill)
+	{
+		TargetToKill->OnKill(this);
+	}
+}
+
+bool ATP_ThirdPersonCharacter::ServerReqKill_Validate(AActor* Target)
+{
+	return true;
+}
+
 void ATP_ThirdPersonCharacter::OnKillTargetBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (Cast<IKillable>(OtherActor) && OtherActor != this) // TODO filter with Object Channel instead ? 
@@ -176,6 +206,11 @@ void ATP_ThirdPersonCharacter::Look(const FInputActionValue& Value)
 void ATP_ThirdPersonCharacter::Kill(const FInputActionValue& Value)
 {
 	UE_LOG(LogTemp, Log, TEXT("Want to kill !"));
+	AActor* TargetToKill = GetKillTarget();
+	if (TargetToKill)
+	{
+		ServerReqKill(TargetToKill);
+	}
 }
 
 

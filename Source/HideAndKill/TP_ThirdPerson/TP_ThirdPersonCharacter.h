@@ -80,11 +80,17 @@ private:
 	// Area to get nearby killable objects
 	UPROPERTY(EditAnywhere)
 	UBoxComponent* KillArea;
-	TSet<AActor*> KillTargetCandidates;
+	TSet<AActor*> KillTargetCandidates; // TODO: IKillable* instead of AActor* ?
 
 	// Get targetable Actor for assassination
 	UFUNCTION(BlueprintCallable)
 	AActor* GetKillTarget() const;
+	// Request an assassination action to server
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerReqKill(AActor* Target);
+	// Server execute and broadcast assassination
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastKillTarget(AActor* Target);
 
 	UFUNCTION()
 	void OnKillTargetBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
