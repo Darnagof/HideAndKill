@@ -31,4 +31,6 @@ private:
 	UBaseCharacterMovementComponent* GetBaseCharacterMovement() const;
 
 	virtual void OnKill(AActor* Killer) override;
+	// Notify the gamemode that this character had been killed (server only)
+	void NotifyGameModeOnKill(AActor* Killer);
 };

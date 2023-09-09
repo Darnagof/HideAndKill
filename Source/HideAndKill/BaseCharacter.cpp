@@ -4,6 +4,7 @@
 #include "BaseCharacter.h"
 
 #include "BaseCharacterMovementComponent.h"
+#include "Core/HideAndKillGameMode.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
@@ -27,5 +28,33 @@ UBaseCharacterMovementComponent* ABaseCharacter::GetBaseCharacterMovement() cons
 void ABaseCharacter::OnKill(AActor* Killer)
 {
 	UE_LOG(LogTemp, Log, TEXT("Killed by %s"), *Killer->GetName());
-	Destroy();
+	
+	if (HasAuthority()) // TODO use event instead ?
+	{
+		NotifyGameModeOnKill(Killer);
+	}
+	Destroy(); // TODO safe to call Destroy after requesting respawn ?
+}
+
+void ABaseCharacter::NotifyGameModeOnKill(AActor* Killer)
+{
+	AHideAndKillGameMode * GM = GetWorld()->GetAuthGameMode<AHideAndKillGameMode>();
+	if (!GM) return;
+
+	APlayerController* KillerController = nullptr;
+	if (APawn* KillerPawn = Cast<APawn>(Killer))
+	{
+		KillerController = Cast<APlayerController>(KillerPawn->GetController());
+	}
+
+	// If killed target is a player
+	if (IsPlayerControlled())
+	{
+		GM->OnPlayerKilled(Cast<APlayerController>(GetController()), KillerController);
+	}
+	// If killed target is NPC
+	else
+	{
+		GM->OnNPCKilled(KillerController);
+	}
 }
