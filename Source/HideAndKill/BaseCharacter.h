@@ -24,6 +24,9 @@ public:
 public:
 	UFUNCTION(BlueprintCallable)
 	void SetSprinting(bool bEnable);
+	// Implementable event to define what happens to character when killed (Destroy by default)
+	UFUNCTION(BlueprintNativeEvent, meta = (DisplayName = "OnKill", ScriptName = "OnKill"))
+	void K2_OnKill(AActor* Killer);
 
 private:
 	// Replacement for GetCharacterMovement, because can't Cast<> on FORCEINLINE method

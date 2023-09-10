@@ -33,6 +33,11 @@ void ABaseCharacter::OnKill(AActor* Killer)
 	{
 		NotifyGameModeOnKill(Killer);
 	}
+	K2_OnKill(Killer);
+}
+
+void ABaseCharacter::K2_OnKill_Implementation(AActor* Killer)
+{
 	Destroy(); // TODO safe to call Destroy after requesting respawn ?
 }
 
