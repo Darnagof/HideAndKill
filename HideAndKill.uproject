@@ -29,9 +29,14 @@
 			"SupportedTargetPlatforms": [
 				"Win64"
 			]
+		},
+		{
+			"Name": "FMODStudio",
+			"Enabled": true
 		}
 	],
 	"TargetPlatforms": [
-		"Windows"
+		"Windows",
+		"HoloLens"
 	]
 }

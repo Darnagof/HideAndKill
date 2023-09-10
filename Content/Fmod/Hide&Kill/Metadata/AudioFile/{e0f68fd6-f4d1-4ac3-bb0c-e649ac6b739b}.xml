@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{e0f68fd6-f4d1-4ac3-bb0c-e649ac6b739b}">
+		<property name="assetPath">
+			<value>Voices, Scream, Pained Scream Male, Scream SND63772 1.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>192</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>2.3674739583333335</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{8e6fe3b8-315a-4d0a-8394-8b36e0ba99b3}</destination>
+		</relationship>
+	</object>
+</objects>
