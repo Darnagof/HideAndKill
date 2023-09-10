@@ -70,6 +70,18 @@ Saved/*
 Intermediate/*
 Plugins/*/Intermediate/*
 
+# FMOD
+Content/Fmod/*/.user/
+Content/Fmod/*/.unsaved/
+Content/Fmod/*/.cache/
+Content/Fmod/*/.restore/
+!Plugins/FMODStudio/Binaries/**
+Plugins/FMODStudio/Docs/*
+Plugins/FMODStudio/Resources/*
+fmod.log
+fmod_editor.log
+
+
 # Cache files for the editor to use
 DerivedDataCache/*
 builds/Windows/Engine/Content/SlateDebug/Fonts/LastResort.tps
