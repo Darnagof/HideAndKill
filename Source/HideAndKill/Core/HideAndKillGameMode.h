@@ -42,6 +42,4 @@ private:
 	void SpawnPlayer(APlayerController* Controller);
 	// Players should not respawn at their starting spawn point
 	bool ShouldSpawnAtStartSpot(AController* Player) override { return false; };
-
-	FTimerHandle RespawnHandle;
 };
