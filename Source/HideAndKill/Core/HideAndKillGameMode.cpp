@@ -40,6 +40,7 @@ void AHideAndKillGameMode::StartRespawnPlayer(APlayerController* Controller)
 {
 	if (Controller)
 	{
+		FTimerHandle RespawnHandle;
 		FTimerDelegate RespawnDelegate;
 		RespawnDelegate.BindUFunction(this, FName("SpawnPlayer"), Controller);
 		GetWorld()->GetTimerManager().SetTimer(RespawnHandle, RespawnDelegate, MinRespawnDelay, false);
