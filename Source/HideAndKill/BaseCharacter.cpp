@@ -5,6 +5,7 @@
 
 #include "BaseCharacterMovementComponent.h"
 #include "Core/HideAndKillGameMode.h"
+#include "AIController.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
@@ -60,6 +61,6 @@ void ABaseCharacter::NotifyGameModeOnKill(AActor* Killer)
 	// If killed target is NPC
 	else
 	{
-		GM->OnNPCKilled(KillerController);
+		GM->OnNPCKilled(Cast<AAIController>(GetController()), KillerController);
 	}
 }
