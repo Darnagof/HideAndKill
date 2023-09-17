@@ -77,10 +77,22 @@ AActor* ATP_ThirdPersonCharacter::GetKillTarget() const
 {
 	if (KillTargetCandidates.IsEmpty()) return nullptr;
 
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this);
+
 	// Get nearest target to player
 	AActor* KillTarget = nullptr;
 	for (auto Candidate : KillTargetCandidates)
 	{
+		// Raycast (to check there is no wall between player and target)
+		FHitResult HitResult;
+		GetWorld()->LineTraceSingleByChannel(HitResult, GetActorLocation(), Candidate->GetActorLocation(), ECC_Pawn, QueryParams);
+		if (HitResult.GetActor() != Candidate)
+		{
+			continue;
+		}
+
+		// Check if candidate is closer to player
 		if (KillTarget == nullptr) {
 			KillTarget = Candidate;
 			continue;
