@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{aeb44d10-a08c-4068-acf6-7c4833c39581}">
+		<property name="assetPath">
+			<value>FAN Air Conditioner, Hard Metal Grinding Noise, Hum, Buzz, LOOP.wav</value>
+		</property>
+		<property name="isStreaming">
+			<value>true</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>96</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>66.992052083333334</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{8e6fe3b8-315a-4d0a-8394-8b36e0ba99b3}</destination>
+		</relationship>
+	</object>
+</objects>

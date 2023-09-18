@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{2b5e8750-0eea-456c-81ce-45014ef83e5e}">
+		<property name="assetPath">
+			<value>FAN Electronic Computer, Low Rumble, Fast Tumbling, LOOP.wav</value>
+		</property>
+		<property name="isStreaming">
+			<value>true</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>96</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>86.884177083333327</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{8e6fe3b8-315a-4d0a-8394-8b36e0ba99b3}</destination>
+		</relationship>
+	</object>
+</objects>

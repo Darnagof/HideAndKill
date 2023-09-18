@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{fa3fa659-4f95-4c51-8d99-0e27248fbbce}">
+		<property name="assetPath">
+			<value>FAN Outdoor AC Unit, Constant Blow Drone Noise, LOOP.wav</value>
+		</property>
+		<property name="isStreaming">
+			<value>true</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>96</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>54.681802083333331</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{8e6fe3b8-315a-4d0a-8394-8b36e0ba99b3}</destination>
+		</relationship>
+	</object>
+</objects>
