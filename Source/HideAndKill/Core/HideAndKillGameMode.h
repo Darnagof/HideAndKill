@@ -23,7 +23,7 @@ class HIDEANDKILL_API AHideAndKillGameMode : public AGameMode
 
 public:
 	AHideAndKillGameMode();
-	void BeginPlay();
+	virtual void PostInitializeComponents() override;
 
 	/** The default pawn class used by AI. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Classes)
