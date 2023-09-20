@@ -29,8 +29,12 @@ AHideAndKillGameMode::AHideAndKillGameMode()
 	//PlayerDiedDelegate.AddUniqueDynamic(this, &AHideAndKillGameMode::OnPlayerDied);
 }
 
-void AHideAndKillGameMode::BeginPlay()
+void AHideAndKillGameMode::PostInitializeComponents()
 {
+	Super::PostInitializeComponents();
+
+	// SpawnManager is initialized here to ensure it's available before any client login
+
 	// Find SpawnManager, create it if not found
 	AActor* FoundSpawnManager = UGameplayStatics::GetActorOfClass(GetWorld(), ASpawnManager::StaticClass());
 	if (!FoundSpawnManager)
