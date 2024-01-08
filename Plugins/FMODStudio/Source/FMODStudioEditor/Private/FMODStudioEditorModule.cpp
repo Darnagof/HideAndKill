@@ -20,32 +20,32 @@
 #include "Sequencer/FMODEventParameterTrackEditor.h"
 #include "AssetTypeActions_FMODEvent.h"
 
-#include "Slate/Public/Framework/Application/SlateApplication.h"
+#include "Framework/Application/SlateApplication.h"
 #include "AssetRegistry/AssetRegistryModule.h"
-#include "UnrealEd/Public/AssetSelection.h"
-#include "Slate/Public/Framework/Notifications/NotificationManager.h"
-#include "Slate/Public/Widgets/Notifications/SNotificationList.h"
+#include "AssetSelection.h"
+#include "Framework/Notifications/NotificationManager.h"
+#include "Widgets/Notifications/SNotificationList.h"
 #include "Developer/Settings/Public/ISettingsModule.h"
 #include "Developer/Settings/Public/ISettingsSection.h"
-#include "UnrealEd/Public/Editor.h"
+#include "Editor.h"
 #include "Slate/SceneViewport.h"
-#include "LevelEditor/Public/LevelEditor.h"
-#include "Sockets/Public/SocketSubsystem.h"
-#include "Sockets/Public/Sockets.h"
-#include "Sockets/Public/IPAddress.h"
-#include "UnrealEd/Public/FileHelpers.h"
-#include "Sequencer/Public/ISequencerModule.h"
-#include "Sequencer/Public/SequencerChannelInterface.h"
-#include "MovieSceneTools/Public/ClipboardTypes.h"
-#include "Engine/Public/DebugRenderSceneProxy.h"
-#include "Engine/Classes/Debug/DebugDrawService.h"
+#include "Editor/LevelEditor/Public/LevelEditor.h"
+#include "SocketSubsystem.h"
+#include "Sockets.h"
+#include "IPAddress.h"
+#include "FileHelpers.h"
+#include "ISequencerModule.h"
+#include "SequencerChannelInterface.h"
+#include "ClipboardTypes.h"
+#include "DebugRenderSceneProxy.h"
+#include "Debug/DebugDrawService.h"
 #include "Settings/ProjectPackagingSettings.h"
 #include "UnrealEdGlobals.h"
-#include "UnrealEd/Public/LevelEditorViewport.h"
+#include "LevelEditorViewport.h"
 #include "ActorFactories/ActorFactory.h"
 #include "Engine/Canvas.h"
 #include "Editor/UnrealEdEngine.h"
-#include "Slate/Public/Framework/MultiBox/MultiBoxBuilder.h"
+#include "Framework/MultiBox/MultiBoxBuilder.h"
 #include "Misc/MessageDialog.h"
 #include "HAL/FileManager.h"
 #include "Interfaces/IMainFrameModule.h"
@@ -334,7 +334,7 @@ void FFMODStudioEditorModule::OnPostEngineInit()
         {
             RegisterHelpMenuEntries();
             MainMenuExtender = MakeShareable(new FExtender);
-            MainMenuExtender->AddMenuExtension("FileLoadAndSave", EExtensionHook::After, NULL,
+            MainMenuExtender->AddMenuExtension("FileOpen", EExtensionHook::After, NULL,
                 FMenuExtensionDelegate::CreateRaw(this, &FFMODStudioEditorModule::AddFileMenuExtension));
             LevelEditor->GetMenuExtensibilityManager()->AddExtender(MainMenuExtender);
         }
@@ -389,8 +389,6 @@ void FFMODStudioEditorModule::ProcessBanks()
         BankUpdateNotifier.SetFilePath(Settings.GetFullBankPath());
 
         BankUpdateNotifier.EnableUpdate(true);
-
-        IFMODStudioModule::Get().RefreshSettings();
     }
 }
 
@@ -797,7 +795,7 @@ void FFMODStudioEditorModule::ValidateFMOD()
                             Settings.Locales[0].bDefault = true;
                         }
                         SettingsSection->Save();
-                        IFMODStudioModule::Get().RefreshSettings();
+                        IFMODStudioModule::Get().ReloadBanks();
                     }
                 }
             }

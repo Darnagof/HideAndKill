@@ -11,6 +11,11 @@
 #include "FMODListener.h"
 #include "FMODSnapshotReverb.h"
 
+#include "FMODAudioLinkModule.h"
+#if WITH_EDITOR
+#include "FMODAudioLinkEditorModule.h"
+#endif
+
 #include "Async/Async.h"
 #include "Interfaces/IPluginManager.h"
 #include "Misc/App.h"
@@ -149,6 +154,10 @@ public:
 
 class FFMODStudioModule : public IFMODStudioModule
 {
+    TUniquePtr<FFMODAudioLinkModule> FMODAudioLinkModule;
+#if WITH_EDITOR
+    TUniquePtr<FFMODAudioLinkEditorModule> FMODAudioLinkEditorModule;
+#endif
 public:
     /** IModuleInterface implementation */
     FFMODStudioModule()
@@ -198,6 +207,8 @@ public:
 
 #if WITH_EDITOR
     void ReloadBanks();
+    void LoadEditorBanks();
+    void UnloadEditorBanks();
 #endif
 
     void CreateStudioSystem(EFMODSystemContext::Type Type);
@@ -219,8 +230,6 @@ public:
     virtual const FFMODListener &GetNearestListener(const FVector &Location) override;
 
     virtual bool HasListenerMoved() override;
-
-    virtual void RefreshSettings();
 
     virtual void SetSystemPaused(bool paused) override;
 
@@ -499,16 +508,28 @@ void FFMODStudioModule::StartupModule()
 
         AcquireFMODFileSystem();
 
-        RefreshSettings();
-
         if (GIsEditor)
         {
+            AssetTable.Load();
+            AssetTable.SetLocale(GetDefaultLocale());
             CreateStudioSystem(EFMODSystemContext::Auditioning);
             CreateStudioSystem(EFMODSystemContext::Editor);
         }
         else
         {
             SetInPIE(true, false);
+        }
+
+        // Load AudioLink module
+        bool bFMODAudioLinkEnabled = Settings.bFMODAudioLinkEnabled;
+        if (bFMODAudioLinkEnabled)
+        {
+            UE_LOG(LogFMOD, Log, TEXT("FFMODAudioLinkModule startup"));
+            FMODAudioLinkModule = MakeUnique<FFMODAudioLinkModule>();
+#if WITH_EDITOR
+            UE_LOG(LogFMOD, Log, TEXT("FFMODAudioLinkEditorModule startup"));
+            FMODAudioLinkEditorModule = MakeUnique<FFMODAudioLinkEditorModule>();
+#endif
         }
     }
 
@@ -681,11 +702,7 @@ void FFMODStudioModule::CreateStudioSystem(EFMODSystemContext::Type Type)
 
     FMOD_ADVANCEDSETTINGS advSettings = { 0 };
     advSettings.cbSize = sizeof(FMOD_ADVANCEDSETTINGS);
-    if (Settings.bVol0Virtual)
-    {
-        advSettings.vol0virtualvol = Settings.Vol0VirtualLevel;
-        InitFlags |= FMOD_INIT_VOL0_BECOMES_VIRTUAL;
-    }
+    advSettings.vol0virtualvol = Settings.Vol0VirtualLevel;
 
     if (!Settings.SetCodecs(advSettings))
     {
@@ -1099,15 +1116,6 @@ void FFMODStudioModule::FinishSetListenerPosition(int NumListeners)
     }
 }
 
-void FFMODStudioModule::RefreshSettings()
-{
-    AssetTable.Load();
-    if (AssetTable.GetLocale().IsEmpty())
-    {
-        AssetTable.SetLocale(GetDefaultLocale());
-    }
-}
-
 void FFMODStudioModule::SetInPIE(bool bInPIE, bool simulating)
 {
     bIsInPIE = bInPIE;
@@ -1133,6 +1141,9 @@ void FFMODStudioModule::SetInPIE(bool bInPIE, bool simulating)
 
         // TODO: Stop sounds for the Editor system? What should happen if the user previews a sequence with transport
         // controls then starts a PIE session? What does happen?
+
+        AssetTable.Load();
+        AssetTable.SetLocale(GetDefaultLocale());
 
         ListenerCount = 1;
         CreateStudioSystem(EFMODSystemContext::Runtime);
@@ -1217,6 +1228,17 @@ void FFMODStudioModule::ShutdownModule()
     DestroyStudioSystem(EFMODSystemContext::Auditioning);
     DestroyStudioSystem(EFMODSystemContext::Runtime);
     DestroyStudioSystem(EFMODSystemContext::Editor);
+
+    if (FMODAudioLinkModule)
+    {
+        FMODAudioLinkModule.Reset();
+    }
+#if WITH_EDITOR
+    if (FMODAudioLinkEditorModule)
+    {
+        FMODAudioLinkEditorModule.Reset();
+    }
+#endif
 
     if (StudioLibHandle && LowLevelLibHandle)
     {
@@ -1466,10 +1488,20 @@ void FFMODStudioModule::ReloadBanks()
     UnloadBanks(EFMODSystemContext::Auditioning);
     DestroyStudioSystem(EFMODSystemContext::Editor);
 
-    RefreshSettings();
+    AssetTable.Load();
 
     LoadBanks(EFMODSystemContext::Auditioning);
     CreateStudioSystem(EFMODSystemContext::Editor);
+}
+
+void FFMODStudioModule::LoadEditorBanks()
+{
+    LoadBanks(EFMODSystemContext::Editor);
+}
+
+void FFMODStudioModule::UnloadEditorBanks()
+{
+    UnloadBanks(EFMODSystemContext::Editor);
 }
 #endif
 

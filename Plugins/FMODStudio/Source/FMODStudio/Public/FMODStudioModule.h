@@ -73,11 +73,6 @@ public:
     virtual void SetSystemPaused(bool paused) = 0;
 
     /**
-	 * Called when user changes any studio settings
-	 */
-    virtual void RefreshSettings() = 0;
-
-    /**
 	 * Called when we enter of leave PIE mode
 	 */
     virtual void SetInPIE(bool bInPIE, bool bSimulating) = 0;
@@ -173,5 +168,11 @@ public:
 #if WITH_EDITOR
     /** Called by the editor module when banks have been modified on disk */
     virtual void ReloadBanks() = 0;
+
+    /** Load Editor banks for auditioning in Sequnecer. */
+    virtual void LoadEditorBanks() = 0;
+
+    /** Unload Editor banks. */
+    virtual void UnloadEditorBanks() = 0;
 #endif
 };
