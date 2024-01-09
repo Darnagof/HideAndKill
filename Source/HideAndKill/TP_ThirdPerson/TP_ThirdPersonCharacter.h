@@ -61,6 +61,8 @@ protected:
 
 	/** Called for kill input */
 	void Kill(const FInputActionValue& Value);
+
+	void RefreshCanKill();
 			
 
 protected:
@@ -81,6 +83,13 @@ private:
 	UPROPERTY(EditAnywhere)
 	UBoxComponent* KillArea;
 	TSet<AActor*> KillTargetCandidates; // TODO: IKillable* instead of AActor* ?
+
+	// Kill Ability variables 
+	UPROPERTY(EditAnywhere)
+	float KillCooldown = 10.0;
+	bool CanKill = false;
+
+	FTimerHandle KillHandle;
 
 	// Get targetable Actor for assassination
 	UFUNCTION(BlueprintCallable)

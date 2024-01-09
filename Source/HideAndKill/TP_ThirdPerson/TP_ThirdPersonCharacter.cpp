@@ -10,6 +10,15 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 
+#include <iostream>
+#include <string>
+#include <chrono>
+#include <thread>
+
+using std::cout;
+using std::chrono::seconds;
+using std::thread;
+using std::this_thread::sleep_for;
 
 //////////////////////////////////////////////////////////////////////////
 // ATP_ThirdPersonCharacter
@@ -67,6 +76,9 @@ void ATP_ThirdPersonCharacter::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
+
+	// Enable Kill ability
+	CanKill = true;
 
 	// Kill area
 	KillArea->OnComponentBeginOverlap.AddUniqueDynamic(this, &ATP_ThirdPersonCharacter::OnKillTargetBeginOverlap);
@@ -151,6 +163,7 @@ void ATP_ThirdPersonCharacter::OnKillTargetEndOverlap(UPrimitiveComponent* Overl
 	}
 }
 
+
 //////////////////////////////////////////////////////////////////////////
 // Input
 
@@ -219,10 +232,20 @@ void ATP_ThirdPersonCharacter::Kill(const FInputActionValue& Value)
 {
 	UE_LOG(LogTemp, Log, TEXT("Want to kill !"));
 	AActor* TargetToKill = GetKillTarget();
-	if (TargetToKill)
+	if (TargetToKill && CanKill)
 	{
 		ServerReqKill(TargetToKill);
 	}
+
+	if (CanKill)
+	{
+		GetWorld()->GetTimerManager().SetTimer(KillHandle, this, &ATP_ThirdPersonCharacter::RefreshCanKill, KillCooldown, false);
+	}
+	CanKill = false;
+}
+
+void ATP_ThirdPersonCharacter::RefreshCanKill(){
+	CanKill = true;
 }
 
 
