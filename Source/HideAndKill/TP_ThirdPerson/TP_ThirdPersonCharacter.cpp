@@ -149,6 +149,10 @@ bool ATP_ThirdPersonCharacter::ServerReqKill_Validate(AActor* Target)
 
 void ATP_ThirdPersonCharacter::OnKillTargetBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if (!CanKill) {
+		return;
+	}
+
 	if (Cast<IKillable>(OtherActor) && OtherActor != this) // TODO filter with Object Channel instead ? 
 	{
 		KillTargetCandidates.Add(OtherActor);
@@ -235,13 +239,9 @@ void ATP_ThirdPersonCharacter::Kill(const FInputActionValue& Value)
 	if (TargetToKill && CanKill)
 	{
 		ServerReqKill(TargetToKill);
-	}
-
-	if (CanKill)
-	{
 		GetWorld()->GetTimerManager().SetTimer(KillHandle, this, &ATP_ThirdPersonCharacter::RefreshCanKill, KillCooldown, false);
+		CanKill = false;
 	}
-	CanKill = false;
 }
 
 void ATP_ThirdPersonCharacter::RefreshCanKill(){
