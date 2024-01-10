@@ -187,7 +187,7 @@ void ATP_ThirdPersonCharacter::Move(const FInputActionValue& Value)
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
 
-	if (Controller != nullptr && !IsFreelooking)
+	if (Controller != nullptr)
 	{
 		if (!IsFreelooking)
 		{
