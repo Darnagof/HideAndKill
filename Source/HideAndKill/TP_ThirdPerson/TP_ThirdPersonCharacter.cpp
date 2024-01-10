@@ -10,16 +10,6 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 
-#include <iostream>
-#include <string>
-#include <chrono>
-#include <thread>
-
-using std::cout;
-using std::chrono::seconds;
-using std::thread;
-using std::this_thread::sleep_for;
-
 //////////////////////////////////////////////////////////////////////////
 // ATP_ThirdPersonCharacter
 
@@ -149,10 +139,6 @@ bool ATP_ThirdPersonCharacter::ServerReqKill_Validate(AActor* Target)
 
 void ATP_ThirdPersonCharacter::OnKillTargetBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (!CanKill) {
-		return;
-	}
-
 	if (Cast<IKillable>(OtherActor) && OtherActor != this) // TODO filter with Object Channel instead ? 
 	{
 		KillTargetCandidates.Add(OtherActor);
@@ -201,21 +187,30 @@ void ATP_ThirdPersonCharacter::Move(const FInputActionValue& Value)
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
 
-	if (Controller != nullptr)
+	if (Controller != nullptr && !IsFreelooking)
 	{
-		// find out which way is forward
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
+		if (!IsFreelooking)
+		{
+			// find out which way is forward
+			const FRotator Rotation = Controller->GetControlRotation();
+			const FRotator YawRotation(0, Rotation.Yaw, 0);
 
-		// get forward vector
-		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	
-		// get right vector 
-		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+			// get forward vector
+			const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 
-		// add movement 
-		AddMovementInput(ForwardDirection, MovementVector.Y);
-		AddMovementInput(RightDirection, MovementVector.X);
+			// get right vector 
+			const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+
+			// add movement 
+			AddMovementInput(ForwardDirection, MovementVector.Y);
+			AddMovementInput(RightDirection, MovementVector.X);
+		}
+		else
+		{
+			// add straight forward movement 
+			AddMovementInput(GetActorForwardVector(), MovementVector.Y);
+			AddMovementInput(GetActorRightVector(), MovementVector.X);
+		}
 	}
 }
 
@@ -230,6 +225,11 @@ void ATP_ThirdPersonCharacter::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void ATP_ThirdPersonCharacter::FreeLook(const FInputActionValue& Value)
+{
+	//Move freelook to c++ here if needed 
 }
 
 void ATP_ThirdPersonCharacter::Kill(const FInputActionValue& Value)

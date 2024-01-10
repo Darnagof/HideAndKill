@@ -43,13 +43,24 @@ class ATP_ThirdPersonCharacter : public ABaseCharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* LookAction;
 
+	/** FreeLook Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* FreeLookAction;
+
 	/** Kill Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* KillAction;
 
+	//CanKill state
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Character, meta = (AllowPrivateAccess = "true"))
+	bool CanKill = false;
+
+	//Freelooking state
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
+	bool IsFreelooking;
+
 public:
 	ATP_ThirdPersonCharacter();
-	
 
 protected:
 
@@ -58,6 +69,9 @@ protected:
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
+
+	/** Called for freelooking input */
+	void FreeLook(const FInputActionValue& Value);
 
 	/** Called for kill input */
 	void Kill(const FInputActionValue& Value);
@@ -87,8 +101,6 @@ private:
 	// Kill Ability variables 
 	UPROPERTY(EditAnywhere)
 	float KillCooldown = 10.0;
-	bool CanKill = false;
-
 	FTimerHandle KillHandle;
 
 	// Get targetable Actor for assassination
