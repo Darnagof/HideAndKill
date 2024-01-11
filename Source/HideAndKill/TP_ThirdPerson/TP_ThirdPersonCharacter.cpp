@@ -195,14 +195,11 @@ void ATP_ThirdPersonCharacter::Move(const FInputActionValue& Value)
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
-		// get forward vector
-		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-
-		// get right vector 
-		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-
 		if (!IsFreelooking)
 		{
+
+			// get forward vector
+			const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 			// add movement 
 			AddMovementInput(ForwardDirection, MovementVector.Y);
 		}
@@ -212,7 +209,13 @@ void ATP_ThirdPersonCharacter::Move(const FInputActionValue& Value)
 
 			if (!GetVelocity().IsZero() && CanTurn)
 			{
+
 				AddMovementInput(GetActorRightVector()/20, MovementVector.X);
+			}
+			else {
+				// get right vector 
+				const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+				AddMovementInput(RightDirection, MovementVector.X);
 			}
 		}
 	}
