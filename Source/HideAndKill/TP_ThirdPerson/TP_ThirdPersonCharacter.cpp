@@ -256,7 +256,6 @@ void ATP_ThirdPersonCharacter::UndoStun() {
 
 void ATP_ThirdPersonCharacter::StunCharacter()
 {
-	UE_LOG(LogTemp, Log, TEXT("STUNNED"));
 	Stunned = true;
 	GetWorld()->GetTimerManager().SetTimer(StunHandle, this, &ATP_ThirdPersonCharacter::UndoStun, StunCooldown, false);
 }
