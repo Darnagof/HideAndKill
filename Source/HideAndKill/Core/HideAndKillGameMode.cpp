@@ -66,6 +66,13 @@ void AHideAndKillGameMode::OnPlayerKilled(APlayerController* Player, APlayerCont
 void AHideAndKillGameMode::OnNPCKilled(AAIController* NPC, APlayerController* Killer)
 {
 	SpawnManager->OnNPCKilled(NPC, Killer);
+
+	ATP_ThirdPersonCharacter* troll = Cast<ATP_ThirdPersonCharacter>(Killer->AcknowledgedPawn);
+	if (troll != nullptr)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Dostun !"));
+		troll->StunCharacter();
+	}
 }
 
 UClass* AHideAndKillGameMode::GetDefaultPawnClassForController_Implementation(AController* InController)

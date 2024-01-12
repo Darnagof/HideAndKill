@@ -189,7 +189,8 @@ void ATP_ThirdPersonCharacter::Move(const FInputActionValue& Value)
 
 	bool Moving = false;
 
-	if (Controller != nullptr)
+	//Can only move if has controller and isnt set Stunned (on kill of an NPC BP_AI Onkill)
+	if (Controller != nullptr && !Stunned)
 	{
 		// find out which way is forward
 		const FRotator Rotation = Controller->GetControlRotation();
@@ -247,6 +248,17 @@ void ATP_ThirdPersonCharacter::Kill(const FInputActionValue& Value)
 
 void ATP_ThirdPersonCharacter::RefreshCanKill(){
 	CanKill = true;
+}
+
+void ATP_ThirdPersonCharacter::UndoStun() {
+	Stunned = false;
+}
+
+void ATP_ThirdPersonCharacter::StunCharacter()
+{
+	UE_LOG(LogTemp, Log, TEXT("STUNNED"));
+	Stunned = true;
+	GetWorld()->GetTimerManager().SetTimer(StunHandle, this, &ATP_ThirdPersonCharacter::UndoStun, StunCooldown, false);
 }
 
 

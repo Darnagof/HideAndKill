@@ -55,12 +55,18 @@ class ATP_ThirdPersonCharacter : public ABaseCharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Character, meta = (AllowPrivateAccess = "true"))
 	bool CanKill = false;
 
+	//Stunned state
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Character, meta = (AllowPrivateAccess = "true"))
+	bool Stunned = false;
+
 	//Freelooking state
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
 	bool IsFreelooking;
 
 public:
 	ATP_ThirdPersonCharacter();
+
+	void StunCharacter();
 
 protected:
 
@@ -76,8 +82,11 @@ protected:
 	/** Called for kill input */
 	void Kill(const FInputActionValue& Value);
 
+	//Refresh Kill ability to kill again
 	void RefreshCanKill();
-			
+
+	//Refresh Stunned to move again
+	void UndoStun();
 
 protected:
 	// APawn interface
@@ -102,6 +111,10 @@ private:
 	UPROPERTY(EditAnywhere)
 	float KillCooldown = 10.0;
 	FTimerHandle KillHandle;
+
+	//Stunned variables
+	float StunCooldown = 4.0;
+	FTimerHandle StunHandle;
 
 	// Get targetable Actor for assassination
 	UFUNCTION(BlueprintCallable)
