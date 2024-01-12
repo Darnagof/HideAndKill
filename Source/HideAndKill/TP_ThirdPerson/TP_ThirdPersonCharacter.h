@@ -59,10 +59,6 @@ class ATP_ThirdPersonCharacter : public ABaseCharacter
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
 	bool IsFreelooking;
 
-	//Dictates if player can QD state
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
-	bool CanTurn;
-
 public:
 	ATP_ThirdPersonCharacter();
 
