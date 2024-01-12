@@ -200,23 +200,17 @@ void ATP_ThirdPersonCharacter::Move(const FInputActionValue& Value)
 
 			// get forward vector
 			const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-			// add movement 
+			// add forward movement 
 			AddMovementInput(ForwardDirection, MovementVector.Y);
+
+			// get right vector 
+			const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+			// add side movement
+			AddMovementInput(RightDirection, MovementVector.X);
 		}
 		else
 		{
 			AddMovementInput(GetActorForwardVector(), MovementVector.Y);
-
-			if (!GetVelocity().IsZero() && CanTurn)
-			{
-
-				AddMovementInput(GetActorRightVector()/20, MovementVector.X);
-			}
-			else {
-				// get right vector 
-				const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-				AddMovementInput(RightDirection, MovementVector.X);
-			}
 		}
 	}
 }
