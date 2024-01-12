@@ -12,4 +12,8 @@ UCLASS()
 class HIDEANDKILL_API ANPC : public ABaseCharacter
 {
 	GENERATED_BODY()
+
+public:
+	UFUNCTION(BlueprintImplementableEvent)
+	void AssignSkin();
 };

@@ -5,6 +5,8 @@
 #include "HideAndKillGameMode.h"
 #include "Kismet/GameplayStatics.h"
 #include "AIController.h"
+#include "HideAndKill/NPC.h"
+
 
 ASpawnManager::ASpawnManager()
 {
@@ -29,6 +31,11 @@ void ASpawnManager::InitManager()
 	TSubclassOf<AController> AIControllerClass = GM->DefaultAIPawnClass->GetDefaultObject<APawn>()->AIControllerClass; // Use Controller class of default AI Pawn defined in Game Mode
 	FActorSpawnParameters SpawnParams;
 
+	//Skin Types;
+	int typeOne = 1;
+	int typeTwo = 2; 
+	int typeThree = 3;
+
 	// Get Controllers from map placed NPC
 	TArray<AActor*> SpawnedAIControllers;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AIControllerClass, SpawnedAIControllers);
@@ -38,6 +45,10 @@ void ASpawnManager::InitManager()
 		if (AIControllers.Num() < MaxNPCPopulation)
 		{
 			AIControllers.Add(FoundController);
+
+			//Spread equal amount of colors amongst AI population	
+			ANPC* NPC = Cast<ANPC>(FoundController->K2_GetPawn());
+			NPC->AssignSkin();
 		}
 		else
 		{
@@ -47,7 +58,6 @@ void ASpawnManager::InitManager()
 			ControllerPawn->Destroy();
 			FoundController->Destroy();
 		}
-		
 	}
 
 	// Create controllers to fit max NPC population

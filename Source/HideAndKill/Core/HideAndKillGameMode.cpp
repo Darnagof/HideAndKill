@@ -67,6 +67,7 @@ void AHideAndKillGameMode::OnNPCKilled(AAIController* NPC, APlayerController* Ki
 {
 	SpawnManager->OnNPCKilled(NPC, Killer);
 
+	//Stun Player that Killed
 	ATP_ThirdPersonCharacter* killerCharacter = Cast<ATP_ThirdPersonCharacter>(Killer->AcknowledgedPawn);
 	if (killerCharacter != nullptr)
 	{
